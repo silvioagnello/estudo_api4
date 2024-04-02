@@ -1,10 +1,11 @@
+import 'package:estudo_api4/pages/favorites_page.dart';
 import 'package:estudo_api4/repositories/prefs.dart';
 import 'package:estudo_api4/repositories/products_repository.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/product_model.dart';
-import '../widgets/list_view.dart';
+import '../widgets/products_list_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -59,12 +60,9 @@ class _MyHomePageState extends State<HomePage>
         body: TabBarView(
             controller: _tabController,
             dragStartBehavior: DragStartBehavior.start,
-            children: [
-              Container(
-                color: Colors.green,
-                child: const Center(child: Text('data')),
-              ),
-              MyListView(),
+            children: const [
+              FavoritesPage(),
+              ProductsListView(),
             ]) //_body(),
         );
   }

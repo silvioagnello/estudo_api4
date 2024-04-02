@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import '../models/product_model.dart';
 import '../pages/product_details.dart';
@@ -10,15 +10,15 @@ import '../repositories/favorites_repository.dart';
 import '../repositories/products_bloc.dart';
 import '../repositories/products_repository.dart';
 
-class MyListView extends StatefulWidget {
-  const MyListView({super.key});
+class ProductsListView extends StatefulWidget {
+  const ProductsListView({super.key});
 
   @override
-  State<MyListView> createState() => _MyListViewState();
+  State<ProductsListView> createState() => _ProductsListViewState();
 }
 
-class _MyListViewState extends State<MyListView>
-    with AutomaticKeepAliveClientMixin<MyListView> {
+class _ProductsListViewState extends State<ProductsListView>
+    with AutomaticKeepAliveClientMixin<ProductsListView> {
   late List<Product>? products;
   ProductsBloc productsBloc = ProductsBloc();
   // final StreamController _streamController = StreamController<List<Product>>();
@@ -31,12 +31,6 @@ class _MyListViewState extends State<MyListView>
   void initState() {
     super.initState();
     productsBloc.getProducts();
-    // Future<List<Product>> products = ProductsRepository.getProducts();
-    // products.then((List<Product> products) {
-    //   setState(() {
-    //     this.products = products;
-    //   });
-    // });
   }
 
   @override
@@ -44,15 +38,6 @@ class _MyListViewState extends State<MyListView>
     super.dispose();
     productsBloc.dispose();
   } // void getProducts() async {
-  //   List<Product> products = await ProductsRepository.getProductsApi();
-  //
-  //   favoritesRepository.getFaves().then((value) {
-  //     //setState(() {
-  //     favoritesRepository.favoritos = value!;
-  //     //});
-  //   });
-  //   _streamController.add(products);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -134,9 +119,13 @@ class _MyListViewState extends State<MyListView>
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       //child: Image.asset('assets/images/place_holder.jpg'),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https:${p.apiFeaturedImage}',
+                      child: CachedNetworkImage(
+                        //FadeInImage.memoryNetwork(
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(), //kTransparentImage,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        imageUrl: 'https:${p.apiFeaturedImage}',
                         width: 250,
                         height: 250,
                         fit: BoxFit.cover,

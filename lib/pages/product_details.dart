@@ -4,6 +4,7 @@ import 'package:estudo_api4/models/favorite_model.dart';
 import 'package:estudo_api4/models/product_model.dart';
 import 'package:estudo_api4/repositories/favorites_repository.dart';
 import 'package:estudo_api4/repositories/prefs.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -69,7 +70,9 @@ class _ProductDetailsState extends State<ProductDetails> {
               const Divider(),
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: Text(widget.product.description ?? ''),
+                child: Text(
+                    '${widget.product.description}+${widget.product.description}' ??
+                        ''),
               ),
             ],
           ),
@@ -89,33 +92,32 @@ class _ProductDetailsState extends State<ProductDetails> {
         //crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(p.name ?? ''),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text('-'),
-                  ),
-                  Text(p.id.toString()),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Row(
-                  children: [
-                    Text(p.brand ?? ''),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Text('-'),
-                    ),
-                    Text(p.category ?? ''),
-                  ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(p.name ?? ''),
                 ),
-              ),
-            ],
+                //const Text(' - '),
+                Text(p.id.toString()),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(p.brand ?? ''),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18.0),
+                        child: Text('-'),
+                      ),
+                      Text(p.category ?? ''),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(18.0),
@@ -158,22 +160,4 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     return c;
   }
-
-  // saveFaves(List<Favorite> favs) async {
-  //   String data = jsonEncode(favs);
-  //   Prefs.setString('my_favorites', data);
-  // }
-
-  // Future<List<Favorite>?> getFaves() async {
-  //   Map<String, dynamic> newFave = {};
-  //   var data = (await Prefs.getString('my_favorites'));
-  //   if (data != '') {
-  //     final List jsonDecoded = json.decode(data) as List;
-  //     return jsonDecoded.map((e) => Favorite.fromJson(e)).toList();
-  //   } else {
-  //     Favorite newF = Favorite(id: '123');
-  //     favoritesRepository.favoritos.add(newF);
-  //     return favoritesRepository.favoritos;
-  //   }
-  // }
 }
