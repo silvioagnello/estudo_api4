@@ -37,13 +37,14 @@ dependencies:
   cupertino_icons: ^1.0.6
   http: ^1.2.0
   shared_preferences: ^2.2.2
-  sqflite: ^2.3.2
+  #sqflite: ^2.3.2
   path: ^1.8.3
   collection: ^1.18.0
-  scoped_model: ^2.0.0
+  #scoped_model: ^2.0.0
   transparent_image: ^2.0.1
   cached_network_image: ^3.3.1
   provider: ^6.1.2
+  bloc_pattern: ^3.0.1
 
 
 dev_dependencies:

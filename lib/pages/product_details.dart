@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:estudo_api4/models/favorite_model.dart';
 import 'package:estudo_api4/models/product_model.dart';
+import 'package:estudo_api4/repositories/favorites_bloc.dart';
 import 'package:estudo_api4/repositories/favorites_repository.dart';
 import 'package:estudo_api4/repositories/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+import '../repositories/products_favorited_bloc.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -28,7 +32,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     super.initState();
     favoritesRepository.getFaves().then((value) {
       setState(() {
-        favoritesRepository.favoritos = value!;
+        favoritos = value;
       });
     });
   }
@@ -45,6 +49,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   _body() {
+    print(favoritos);
     return Center(
       child: ListView(
         children: [
@@ -83,9 +88,14 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Padding _grupoLinha() {
     Product p = widget.product;
-    var isFav = favoritesRepository.getFav(p);
 
+    isFav = favoritos.firstWhereOrNull((k) => k.id == p.id.toString()) != null
+        ? true
+        : false;
     colores = isFav ? Colors.red : Colors.grey;
+
+    final bloc = Provider.of<FavoritesBloc>(context);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -123,11 +133,31 @@ class _ProductDetailsState extends State<ProductDetails> {
             padding: const EdgeInsets.all(18.0),
             child: Row(
               children: [
-                IconButton(
-                    onPressed: () {
-                      isFav = _onClickFavorite(p, isFav) ?? false;
-                    },
-                    icon: Icon(Icons.favorite, size: 30, color: colores)),
+                // IconButton(
+                //   onPressed: () {
+                //     //isFav = _onClickFavorite(p, isFav) ?? false;
+                //     setState(() {
+                //       isFav = !isFav;
+                //     });
+                //   },
+                // icon: Icon(Icons.favorite, size: 30, color: colores)),
+                StreamBuilder(
+                    stream: bloc.outFav,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var teste =
+                            snapshot.data.toString().contains(p.id.toString());
+                        colores = teste ? Colors.red : Colors.grey;
+                      }
+                      return IconButton(
+                        onPressed: () {
+                          //print(colores.toString());
+                          bloc.toggleFavorite(p.id.toString());
+                        },
+                        icon: Icon(Icons.favorite, size: 30, color: colores),
+                      );
+                    }),
+
                 IconButton(
                     onPressed: () {},
                     icon: const Icon(

@@ -1,43 +1,40 @@
 import 'dart:async';
 
-import 'package:estudo_api4/models/favorite_model.dart';
-import 'package:estudo_api4/repositories/favorites_repository.dart';
-import 'package:estudo_api4/repositories/products_repository.dart';
+import 'package:collection/collection.dart';
+import 'package:estudo_api4/repositories/products_favorited_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../models/product_model.dart';
+import '../models/favorite_model.dart';
+import 'favorites_repository.dart';
 
-class Favoritesbloc {
-  final StreamController _streamController = StreamController<List<Product>>();
+class FavoritesBloc {
+  List<Favorite> faves = [];
+  final _streamController = StreamController<List<Favorite>>.broadcast();
+  Stream get outFav => _streamController.stream;
   FavoritesRepository favoritesRepository = FavoritesRepository();
 
-  Stream get stream => _streamController.stream;
+  void toggleFavorite(String id) async {
+    faves = await favoritesRepository.getFaves();
+    // Favoritedbloc faveBloc = Provider.of<Favoritedbloc>(context);
+    // faveBloc.getFavorited();
+    // faves = faveBloc.faveProducts.cast<Favorite>();
 
-  getFavorites() async {
-    try {
-      List<Product> products = await ProductsRepository.getProductsApi();
+    Favorite newF = Favorite(id: id);
 
-      favoritesRepository.getFaves().then((value) {
-        favoritesRepository.favoritos = value!;
-      });
-
-      List<Product> faves = [];
-      if (favoritesRepository.favoritos.isNotEmpty) {
-        for (var img in products) {
-          for (var frnd in favoritesRepository.favoritos) {
-            if (img.id.toString() == frnd.id.toString()) {
-              faves.add(img);
-            }
-          }
-        }
-      }
-
-      _streamController.add(faves);
-    } on Exception catch (e) {
-      _streamController.addError(e);
+    bool found =
+        faves.firstWhereOrNull((k) => k.id == id) != null ? true : false;
+    if (found) {
+      faves.removeWhere((e) => e.id == newF.id.toString());
+    } else {
+      faves.add(newF);
     }
+
+    favoritesRepository.saveFaves(faves);
+
+    _streamController.add(faves);
   }
 
-  void dispose() {
+  dispose() {
     _streamController.close();
   }
 }

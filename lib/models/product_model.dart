@@ -84,4 +84,9 @@ class Product {
 
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Product{id: $id}';
+  }
 }
