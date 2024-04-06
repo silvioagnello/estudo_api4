@@ -1,20 +1,29 @@
-import 'dart:async';
 import 'package:estudo_api4/models/favorite_model.dart';
 import 'package:estudo_api4/repositories/favorites_repository.dart';
 import 'package:estudo_api4/repositories/products_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mobx/mobx.dart';
 import '../models/product_model.dart';
 
-class Favoritedbloc extends ChangeNotifier {
+part 'favorited_model.g.dart';
+
+class FavoritedModel = _FavoritedModel with _$FavoritedModel;
+
+abstract class _FavoritedModel with Store {
   FavoritesRepository favoritesRepository = FavoritesRepository();
 
-  List<Favorite> faves = [];
+  //List<Favorite> faves = [];
+
+  @observable
+  String error = '';
+
+  @observable
   List<Product> faveProducts = [];
 
-  void getFavorited() async {
+  @action
+  getFavorited() async {
     faveProducts = [];
     try {
+      error = '';
       List<Product> products = await ProductsRepository.getProductsApi();
 
       List<Favorite> faves = await favoritesRepository.getFaves();
@@ -27,10 +36,11 @@ class Favoritedbloc extends ChangeNotifier {
             }
           }
         }
+      } else {
+        faveProducts = [];
       }
-      notifyListeners();
     } on Exception catch (e) {
-      notifyListeners();
+      error = e.toString();
     }
   }
 }

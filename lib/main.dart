@@ -1,14 +1,8 @@
 import 'package:estudo_api4/pages/home_page.dart';
 import 'package:estudo_api4/repositories/favorites_bloc.dart';
 import 'package:estudo_api4/repositories/products_favorited_bloc.dart';
-import 'package:estudo_api4/repositories/favorites_repository.dart';
-import 'package:estudo_api4/repositories/products_bloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-//import 'package:scoped_model/scoped_model.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;

@@ -60,8 +60,8 @@ class _MyHomePageState extends State<HomePage>
         body: TabBarView(
             controller: _tabController,
             dragStartBehavior: DragStartBehavior.start,
-            children: const [
-              FavoritesPage(),
+            children: [
+              ProductsListView(true), //FavoritesPage(),
               ProductsListView(),
             ]) //_body(),
         );

@@ -10,7 +10,8 @@ import '../repositories/products_favorited_bloc.dart';
 import '../repositories/products_bloc.dart';
 
 class ProductsListView extends StatefulWidget {
-  const ProductsListView([List<Product>? produtos]);
+  bool onlyfaves;
+  ProductsListView([this.onlyfaves = false, List<Product>? produtos]);
 
   @override
   State<ProductsListView> createState() => _ProductsListViewState();
@@ -119,6 +120,9 @@ class _ProductsListViewState extends State<ProductsListView>
 
     Favoritedbloc faveBloc = Provider.of<Favoritedbloc>(context);
     productFaves = faveBloc.faveProducts;
+    if (widget.onlyfaves == true) {
+      table = productFaves;
+    }
 
     return Container(
       padding: const EdgeInsets.all(18),
