@@ -15,9 +15,6 @@ class FavoritesBloc {
 
   void toggleFavorite(String id) async {
     faves = await favoritesRepository.getFaves();
-    // Favoritedbloc faveBloc = Provider.of<Favoritedbloc>(context);
-    // faveBloc.getFavorited();
-    // faves = faveBloc.faveProducts.cast<Favorite>();
 
     Favorite newF = Favorite(id: id);
 

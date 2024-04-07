@@ -53,7 +53,7 @@ class _ProductsListViewState extends State<ProductsListView>
     Favoritedbloc faveBloc = Provider.of<Favoritedbloc>(context, listen: false);
     faveBloc.getFavorited();
     productFaves = faveBloc.faveProducts;
-    print('Faves $productFaves');
+    //print('Faves $productFaves');
   }
 
   @override
@@ -65,7 +65,7 @@ class _ProductsListViewState extends State<ProductsListView>
   @override
   Widget build(context) {
     super.build(context);
-
+    var msg = 'Sem dados';
     return FutureBuilder(
       future: getProducts(),
       builder: (context, snapshot) {
@@ -94,16 +94,21 @@ class _ProductsListViewState extends State<ProductsListView>
 
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.connectionState == ConnectionState.none) {
+          // if (productFaves!.isNotEmpty && widget.onlyfaves == false) {
           return const Center(
               child: CircularProgressIndicator(color: Colors.green));
+          // }
         }
-        // print(snapshot.connectionState);
-        return const Center(
+
+        if (widget.onlyfaves == true && productFaves!.isEmpty) {
+          msg = 'Sem favoritos';
+        }
+        return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Sem dados'),
-              Padding(
+              Text(msg),
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: IconButton(
                     icon: Icon(Icons.refresh, size: 50), onPressed: null),
@@ -133,13 +138,13 @@ class _ProductsListViewState extends State<ProductsListView>
           Product p = table[index];
           String? val = p.price ?? '0.0';
           valor = double.parse(val).toStringAsFixed(2);
-
-          var isFavorited = productFaves?.firstWhereOrNull(
-                      (k) => k.id.toString() == p.id.toString()) !=
-                  null
-              ? true
-              : false;
-
+          if (widget.onlyfaves != true) {
+            isFavorited = productFaves?.firstWhereOrNull(
+                        (k) => k.id.toString() == p.id.toString()) !=
+                    null
+                ? true
+                : false;
+          }
           return Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

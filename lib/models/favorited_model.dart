@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:estudo_api4/models/favorite_model.dart';
 import 'package:estudo_api4/repositories/favorites_repository.dart';
 import 'package:estudo_api4/repositories/products_repository.dart';
@@ -21,9 +22,10 @@ abstract class _FavoritedModel with Store {
 
   @action
   getFavorited() async {
-    faveProducts = [];
     try {
       error = '';
+      faveProducts = [];
+
       List<Product> products = await ProductsRepository.getProductsApi();
 
       List<Favorite> faves = await favoritesRepository.getFaves();
@@ -32,7 +34,14 @@ abstract class _FavoritedModel with Store {
         for (var img in products) {
           for (var frnd in faves) {
             if (img.id.toString() == frnd.id.toString()) {
-              faveProducts.add(img);
+              var isFav =
+                  faves.firstWhereOrNull((k) => k.id == img.id.toString()) !=
+                          null
+                      ? true
+                      : false;
+              if (isFav == false) {
+                faveProducts.add(img);
+              }
             }
           }
         }

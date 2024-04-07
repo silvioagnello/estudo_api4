@@ -49,7 +49,6 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   _body() {
-    print(favoritos);
     return Center(
       child: ListView(
         children: [
